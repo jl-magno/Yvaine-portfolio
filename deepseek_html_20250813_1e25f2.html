@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEY's Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #ff6b8b;
+            --secondary-color: #ff8e9e;
+            --accent-color: #ff4757;
+            --dark-color: #2f3542;
+            --light-color: #f9f9f9;
+            --strawberry-red: #ff4757;
+            --strawberry-pink: #ff6b81;
+            --strawberry-green: #7bed9f;
+        }
+
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            overflow-x: hidden;
+            font-family: 'Quicksand', sans-serif;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Strawberry Rain */
+        .strawberry-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .strawberry-icon {
+            position: absolute;
+            font-size: 1.5rem;
+            color: var(--strawberry-red);
+            animation: falling linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes falling {
+            0% {
+                transform: translateY(-10vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Font Styles */
+        h1, h2, h3, .logo {
+            font-family: 'Pacifico', cursive;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--strawberry-pink), var(--strawberry-red));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 1s ease-out;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-family: 'Pacifico', cursive;
+        }
+
+        .strawberry-loader {
+            width: 80px;
+            height: 80px;
+            position: relative;
+        }
+
+        .strawberry {
+            width: 50px;
+            height: 50px;
+            background-color: var(--strawberry-red);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            position: absolute;
+            top: 0;
+            left: 15px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            animation: bounce 1s infinite alternate;
+        }
+
+        .leaf {
+            width: 20px;
+            height: 20px;
+            background-color: var(--strawberry-green);
+            border-radius: 50% 0 50% 0;
+            position: absolute;
+            top: -5px;
+            left: 30px;
+            transform: rotate(-20deg);
+        }
+
+        @keyframes bounce {
+            to {
+                transform: translateY(20px);
+            }
+        }
+
+        .dots {
+            display: flex;
+            margin-top: 70px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            background-color: white;
+            border-radius: 50%;
+            margin: 0 5px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        .dot:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        .dot:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 107, 129, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 400;
+            color: var(--strawberry-red);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+            color: var(--strawberry-green);
+            font-size: 2.2rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 600;
+            transition: color 0.3s;
+            position: relative;
+            font-size: 1.1rem;
+        }
+
+        nav ul li a:hover {
+            color: var(--strawberry-red);
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--strawberry-red);
+            transition: width 0.3s;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 50px 0;
+            position: relative;
+        }
+
+        .hero-content {
+            flex: 1;
+            padding-right: 50px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--strawberry-red);
+            line-height: 1.1;
+        }
+
+        .hero h1 span {
+            color: var(--strawberry-pink);
+            display: inline-block;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            font-weight: 400;
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-img {
+            width: 350px;
+            height: 350px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 15px solid white;
+            box-shadow: 0 15px 40px rgba(255, 107, 129, 0.3);
+            transition: transform 0.3s;
+        }
+
+        .profile-img:hover {
+            transform: scale(1.05);
+        }
+
+        /* About Section */
+        .about {
+            padding: 80px 0;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 107, 129, 0.1);
+            margin: 50px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(90deg, var(--strawberry-red), var(--strawberry-pink));
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 3rem;
+            color: var(--strawberry-red);
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--strawberry-red), var(--strawberry-pink));
+            border-radius: 2px;
+        }
+
+        .about-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .about-text {
+            flex: 1;
+            padding-right: 50px;
+        }
+
+        .about-text h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--strawberry-pink);
+        }
+
+        .typing-text {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: #555;
+            min-height: 100px;
+            border-right: 2px solid var(--strawberry-red);
+            padding-right: 5px;
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% {
+                border-color: transparent;
+            }
+            50% {
+                border-color: var(--strawberry-red);
+            }
+        }
+
+        .about-stats {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .stat-item {
+            background-color: var(--light-color);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--strawberry-red), var(--strawberry-pink));
+            transition: width 0.3s;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 107, 129, 0.2);
+        }
+
+        .stat-item:hover::before {
+            width: 100%;
+            opacity: 0.1;
+        }
+
+        .stat-item i {
+            font-size: 2.5rem;
+            color: var(--strawberry-red);
+            margin-bottom: 15px;
+            transition: transform 0.3s;
+        }
+
+        .stat-item:hover i {
+            transform: scale(1.2);
+        }
+
+        .stat-item h4 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+
+        .stat-item p {
+            color: #777;
+            font-size: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 107, 129, 0.2);
+            position: relative;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background-color: var(--strawberry-pink);
+            color: white;
+            border-radius: 50%;
+            margin: 0 15px;
+            transition: all 0.3s;
+            font-size: 1.3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .social-links a:hover::before {
+            left: 100%;
+        }
+
+        .social-links a:hover {
+            background-color: var(--strawberry-red);
+            transform: translateY(-5px) rotate(10deg);
+            box-shadow: 0 5px 15px rgba(255, 71, 87, 0.4);
+        }
+
+        footer p {
+            color: #777;
+            font-size: 1rem;
+        }
+
+        /* Music Player */
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: white;
+            border-radius: 50px;
+            padding: 12px 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            z-index: 100;
+            transition: all 0.3s;
+        }
+
+        .music-player:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .music-player i {
+            color: var(--strawberry-red);
+            font-size: 1.5rem;
+            margin-right: 15px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .music-player i:hover {
+            transform: scale(1.2);
+        }
+
+        .music-info {
+            font-size: 0.9rem;
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero, .about-content {
+                flex-direction: column;
+            }
+
+            .hero-content, .about-text {
+                padding-right: 0;
+                margin-bottom: 50px;
+                text-align: center;
+            }
+
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            .profile-img {
+                width: 280px;
+                height: 280px;
+            }
+
+            .section-title h2 {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+            }
+
+            .about-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            .social-links a {
+                width: 45px;
+                height: 45px;
+                margin: 0 10px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .typing-text {
+                font-size: 1.1rem;
+            }
+
+            .stat-item {
+                padding: 20px;
+            }
+
+            .music-player {
+                padding: 10px 20px;
+            }
+
+            .music-info {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Strawberry Rain Background -->
+    <div class="strawberry-rain" id="strawberryRain"></div>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen">
+        <div class="loading-text">Loading...</div>
+        <div class="strawberry-loader">
+            <div class="strawberry"></div>
+            <div class="leaf"></div>
+        </div>
+        <div class="dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-strawberry"></i>
+                SEY
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#home"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#about"><i class="fas fa-user"></i> About</a></li>
+                    <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <h1>Hello, I'm <span>SEY</span></h1>
+                <p><i class="fas fa-heart" style="color: var(--strawberry-red);"></i> A cute girl with a passion for strawberries and being the best girlfriend to Rish.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                    <a href="#"><i class="fab fa-discord"></i></a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="https://i.imgur.com/qrdydon.jpeg" alt="SEY" class="profile-img">
+            </div>
+        </section>
+
+        <section class="about" id="about">
+            <div class="section-title">
+                <h2>About Me</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3><i class="fas fa-question-circle"></i> Who am I?</h3>
+                    <div class="typing-text" id="typing-text"></div>
+                </div>
+                <div class="about-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-heartbeat"></i>
+                        <h4>Relationship Status</h4>
+                        <p>In a relationship with Rish</p>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-strawberry"></i>
+                        <h4>Favorite Fruit</h4>
+                        <p>Strawberries</p>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-smile-wink"></i>
+                        <h4>Personality</h4>
+                        <p>Cute and Lovely</p>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-magic"></i>
+                        <h4>Special Skill</h4>
+                        <p>Making Rish happy</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer id="contact">
+            <div class="social-links">
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-tiktok"></i></a>
+                <a href="#"><i class="fab fa-pinterest"></i></a>
+                <a href="#"><i class="fab fa-discord"></i></a>
+            </div>
+            <p><i class="fas fa-copyright"></i> 2023 SEY's Strawberry Portfolio. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Music Player -->
+    <div class="music-player">
+        <i class="fas fa-music" id="music-toggle"></i>
+        <div class="music-info">Now Playing: back-from-toronto.mp3</div>
+        <audio id="bg-music" loop>
+            <source src="back-from-toronto.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <script>
+        // Create falling strawberries
+        function createStrawberryRain() {
+            const container = document.getElementById('strawberryRain');
+            const numStrawberries = 30;
+            
+            for (let i = 0; i < numStrawberries; i++) {
+                const strawberry = document.createElement('div');
+                strawberry.className = 'strawberry-icon';
+                strawberry.innerHTML = '<i class="fas fa-strawberry"></i>';
+                
+                // Random position
+                const leftPos = Math.random() * 100;
+                strawberry.style.left = `${leftPos}%`;
+                
+                // Random animation duration (5-15s)
+                const duration = 5 + Math.random() * 10;
+                strawberry.style.animationDuration = `${duration}s`;
+                
+                // Random delay (0-10s)
+                const delay = Math.random() * 10;
+                strawberry.style.animationDelay = `${delay}s`;
+                
+                // Random size
+                const size = 0.8 + Math.random() * 1.5;
+                strawberry.style.fontSize = `${size}rem`;
+                
+                // Random opacity
+                const opacity = 0.3 + Math.random() * 0.7;
+                strawberry.style.opacity = opacity;
+                
+                container.appendChild(strawberry);
+            }
+        }
+
+        // Loading Screen
+        window.addEventListener('load', function() {
+            // Create strawberry rain
+            createStrawberryRain();
+            
+            setTimeout(function() {
+                document.querySelector('.loading-screen').classList.add('hidden');
+                document.querySelector('.container').classList.add('show');
+                
+                // Start music (autoplay is blocked by most browsers without user interaction)
+                const musicToggle = document.getElementById('music-toggle');
+                const bgMusic = document.getElementById('bg-music');
+                
+                musicToggle.addEventListener('click', function() {
+                    if (bgMusic.paused) {
+                        bgMusic.play();
+                        musicToggle.classList.remove('fa-music');
+                        musicToggle.classList.add('fa-pause');
+                    } else {
+                        bgMusic.pause();
+                        musicToggle.classList.remove('fa-pause');
+                        musicToggle.classList.add('fa-music');
+                    }
+                });
+                
+                // Simulate click to start music after user interaction
+                musicToggle.click();
+            }, 2000);
+        });
+
+        // Forward and Backward Typing Effect
+        const text = "cute lang.\ngirlfriend ni rish.";
+        const typingText = document.getElementById('typing-text');
+        let i = 0;
+        let isDeleting = false;
+        let typingSpeed = 100; // Normal typing speed
+        let deleteSpeed = 50; // Faster deleting speed
+        let pauseDuration = 1500; // Pause between typing and deleting
+        
+        function typeWriter() {
+            if (!isDeleting && i < text.length) {
+                // Typing forward
+                if (text.charAt(i) === '\n') {
+                    typingText.innerHTML += '<br>';
+                } else {
+                    typingText.innerHTML += text.charAt(i);
+                }
+                i++;
+                setTimeout(typeWriter, typingSpeed);
+            } else if (isDeleting && i > 0) {
+                // Deleting backward
+                typingText.innerHTML = text.substring(0, i-1);
+                i--;
+                setTimeout(typeWriter, deleteSpeed);
+            } else {
+                // Switch between typing and deleting
+                isDeleting = !isDeleting;
+                if (!isDeleting) {
+                    i = 0; // Reset to start typing from beginning
+                }
+                setTimeout(typeWriter, isDeleting ? pauseDuration : typingSpeed);
+            }
+        }
+        
+        // Start typing after loading
+        setTimeout(typeWriter, 2500);
+    </script>
+</body>
+</html>
